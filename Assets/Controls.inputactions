@@ -2,7 +2,7 @@
     "name": "Controls",
     "maps": [
         {
-            "name": "Player",
+            "name": "Joining",
             "id": "931c62fc-af63-412f-9dd9-83d7e51fed85",
             "actions": [
                 {
@@ -64,6 +64,34 @@
                     "processors": "",
                     "groups": "",
                     "action": "Ready",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Movement",
+            "id": "954ca6fb-0bc4-490e-a646-dac6e666f4c8",
+            "actions": [
+                {
+                    "name": "Move",
+                    "type": "Value",
+                    "id": "ac1eb817-8480-4383-8f33-04c970480106",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "85df2fac-aeb6-49fe-a018-54b9692cdb67",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

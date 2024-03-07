@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerAssign : MonoBehaviour {
     [SerializeField] PlayerAssignUI player1UI;
@@ -11,9 +10,10 @@ public class PlayerAssign : MonoBehaviour {
     bool player2Ready;
 
     void Start() {
-        InputManager.Instance.SubPerformed("Join", OnJoin);
-        InputManager.Instance.SubPerformed("Ready", OnReady);
-        InputManager.Instance.SubPerformed("Leave", OnLeave);
+        InputManager im = InputManager.Instance;
+        im.SubPerformed("Join", OnJoin);
+        im.SubPerformed("Ready", OnReady);
+        im.SubPerformed("Leave", OnLeave);
     }
 
     void OnJoin(InputAction.CallbackContext ctx) {
@@ -37,6 +37,10 @@ public class PlayerAssign : MonoBehaviour {
         else if (PlayerDeviceInfo.Player2ID == id) {
             player2Ready = !player2Ready;
             player2UI.SetReadyStatus(player2Ready);
+        }
+
+        if (player1Ready && player2Ready) {
+            SceneManager.LoadScene("Gameplay");
         }
     }
 

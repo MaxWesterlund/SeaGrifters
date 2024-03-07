@@ -7,6 +7,7 @@ public class InputManager : SingletonBehaviour<InputManager> {
 
     void Awake() {
         asset.Enable();
+        DontDestroyOnLoad(gameObject);
     }
 
     public void SubPerformedAndCanceled(string name, Action<InputAction.CallbackContext> s) {
