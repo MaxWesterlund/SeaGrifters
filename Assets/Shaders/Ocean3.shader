@@ -1,13 +1,18 @@
-Shader "Custom/Ocean" {
+Shader "Custom/Ocean3" {
     Properties {
         _DepthGradientShallow("Depth Gradient Shallow", Color) = (1,1,1,1)
         _DepthGradientDeep("Depth Gradient Deep", Color) = (1,1,1,1)
         _DepthMaxDistance("Depth Maximum Distance", Float) = 1
+        _SurfaceNoise("Surface Noise", 2D) = "white" {}
+        _SurfaceNoiseScroll("Surface Noise Scroll Amount", Vector) = (0,0,0,0)
+        _FoamDistance("Foam Distance", Float) = 1
     }
     SubShader {
-        Tags { "RenderType"="Opaque" }
+        Tags { 
+            "Queue"="Transparent"
+        }
         LOD 100
-
+        
         Pass {
             CGPROGRAM
             #pragma vertex vert
@@ -17,20 +22,23 @@ Shader "Custom/Ocean" {
 
             struct appdata {
                 float4 vertex : POSITION;
-                float2 uv : TEXCOORD0;
+                float4 uv : TEXCOORD0;
             };
 
             struct v2f {
                 float4 vertex : SV_POSITION;
                 float4 screenPosition : TEXCOORD2;
-                float2 uv : TEXCOORD0;
+                float2 noiseUV : TEXCOORD0;
             };
 
-            v2f vert(appdata v) {
+            sampler2D _SurfaceNoise;
+            float4 _SurfaceNoise_ST;
+
+            v2f vert (appdata v) {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.screenPosition = ComputeScreenPos(o.vertex);
-                o.uv = v.uv;
+                o.noiseUV = TRANSFORM_TEX(v.uv, _SurfaceNoise);
                 return o;
             }
 
@@ -41,44 +49,30 @@ Shader "Custom/Ocean" {
 
             sampler2D _CameraDepthTexture;
 
-            fixed4 frag(v2f i) : SV_Target {
-                int numWaves = 20;
-                float seed = 0.98912;
-                float freq = 1;
-                float speed = 1;
+            float _SurfaceNoiseCutoff;
+            float4 _SurfaceNoiseScroll;
 
-                float2 pos = i.uv.xy;
-                
-                float amp = 1;
-                float totAmp = 0;
+            float _FoamDistance;
 
-                float height = 0;
-
-                for (int j = 0; j < numWaves; j++) {
-                    float angle = seed * j;
-                    float2 direction = float2(cos(angle), sin(angle));
-                    
-                    float x = dot(direction, pos) * freq + _Time.y * speed;
-                    float wave = amp * sin(x);
-
-                    height += wave;
-                    totAmp += amp;
-
-                    freq *= 1.18;
-                    amp *= 0.82;
-                }
-
-                float waveHeight = height / totAmp;
-
+            fixed4 frag (v2f i) : SV_Target {
                 float existingDepth01 = tex2Dproj(_CameraDepthTexture, UNITY_PROJ_COORD(i.screenPosition)).r;
-                float existingDepthLinear = LinearEyeDepth(existingDepth01) + waveHeight;
+                float existingDepthLinear = LinearEyeDepth(existingDepth01);
 
                 float depthDifference = existingDepthLinear - i.screenPosition.w;
 
                 float waterDepthDifference01 = saturate(depthDifference / _DepthMaxDistance);
                 float4 waterColor = lerp(_DepthGradientShallow, _DepthGradientDeep, waterDepthDifference01);
                 
-                return waterColor;
+                float2 noiseUV = float2(i.noiseUV.x + _Time.y * _SurfaceNoiseScroll.x, i.noiseUV.y + _Time.y * _SurfaceNoiseScroll.y);
+                
+                float surfaceNoiseSample = tex2D(_SurfaceNoise, noiseUV).r;
+                
+                float foamDepthDifference01 = saturate(depthDifference / _FoamDistance);
+                float surfaceNoiseCutoff = foamDepthDifference01;
+
+                float surfaceNoise = surfaceNoiseSample > surfaceNoiseCutoff ? 1 : 0;
+
+                return waterColor + surfaceNoise;
             }
             ENDCG
         }

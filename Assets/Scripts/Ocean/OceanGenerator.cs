@@ -1,45 +1,84 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class OceanGenerator : MonoBehaviour {
     [SerializeField] int tileSize;
-    [SerializeField] int quadAmount;
-    [SerializeField] Material material;
+    [SerializeField] int seabedResolution;
+    [SerializeField] float seabedHeightResolution;
+    [SerializeField] float seabedHeight;
+    [SerializeField] float oceanDepth; 
+    [SerializeField] Material oceanMaterial;
+    [SerializeField] Material seabedMaterial;
 
-    GameObject tileObject;
+    GameObject oceanSurface;
+    GameObject seabed;
+
+    float seed;
 
     void Start() {
-        GenerateTile();
+        oceanSurface = new("OceanSurface");
+        oceanSurface.AddComponent<MeshFilter>().mesh = new();
+        oceanSurface.AddComponent<MeshRenderer>().material = oceanMaterial;
+
+        seabed = new("Seabed");
+        seabed.AddComponent<MeshFilter>().mesh = new();
+        seabed.AddComponent<MeshRenderer>().material = seabedMaterial;
+
+        seed = UnityEngine.Random.Range(-1000f, 1000f);
+
+        UpdateTile();
     }
 
-    void GenerateTile() {
-        tileObject = new GameObject("OceanTile");
-
-        Mesh mesh = GenerateOceanMesh();
-        
-        MeshFilter mf = tileObject.AddComponent<MeshFilter>();
-        mf.mesh = mesh;
-        MeshRenderer mr = tileObject.AddComponent<MeshRenderer>();
-        mr.material = material;
+    void UpdateTile() {
+        UpdateOceanMesh(oceanSurface.GetComponent<MeshFilter>().mesh);
+        UpdateSeabedMesh(seabed.GetComponent<MeshFilter>().mesh);
     }
 
-    Mesh GenerateOceanMesh() {
+    void UpdateOceanMesh(Mesh mesh) {
+        int s = tileSize / 2;
+        float h = seabedHeight + oceanDepth;
+
+        mesh.vertices = new Vector3[] {
+            new(-s, h, -s),
+            new(-s, h, s),
+            new(s, h, -s),
+            new(s, h, s),
+            new(s, h, -s),
+            new(-s, h, s)
+        };
+        mesh.triangles = new int[] { 0, 1, 2, 3, 4, 5 };
+        mesh.uv = new Vector2[] {
+            new(-s, -s),
+            new(-s, s),
+            new(s, -s),
+            new(s, s),
+            new(s, -s),
+            new(-s, s)
+        };
+
+        mesh.RecalculateNormals();
+    }
+
+    void UpdateSeabedMesh(Mesh mesh) {
         List<Vector3> verts = new();
         List<int> tris = new();
 
-        float qs = (float)tileSize / quadAmount;
+        float qs = (float)tileSize / seabedResolution;
+        Vector3 off = new(tileSize / 2, 0, tileSize / 2);
 
-        for (int y = 0; y < quadAmount; y++) {
-            for (int x = 0; x < quadAmount; x++) {
+        for (int y = 0; y < seabedResolution; y++) {
+            for (int x = 0; x < seabedResolution; x++) {
+                float val = Mathf.PerlinNoise(x + seed, y + seed);
+                float h = val * seabedHeight;
+                
                 verts.AddRange(new Vector3[] {
-                    new(x * qs, 0, y * qs),
-                    new(x * qs, 0, y * qs + qs),
-                    new(x * qs + qs, 0, y * qs),
-                    new(x * qs + qs, 0, y * qs + qs),
-                    new(x * qs + qs, 0, y * qs),
-                    new(x * qs, 0, y * qs + qs),
+                    new Vector3(x * qs, GetHeight(x, y), y * qs) - off,
+                    new Vector3(x * qs, GetHeight(x, y + 1), y * qs + qs) - off,
+                    new Vector3(x * qs + qs, GetHeight(x + 1, y), y * qs) - off,
+                    new Vector3(x * qs + qs, GetHeight(x + 1, y + 1), y * qs + qs) - off,
+                    new Vector3(x * qs + qs, GetHeight(x + 1, y), y * qs) - off,
+                    new Vector3(x * qs, GetHeight(x, y + 1), y * qs + qs) - off,
                 });
                 for (int i = 0; i < 6; i++) {
                     tris.Add(tris.Count);
@@ -47,11 +86,14 @@ public class OceanGenerator : MonoBehaviour {
             }
         }
 
-        Mesh mesh = new();
         mesh.vertices = verts.ToArray();
         mesh.triangles = tris.ToArray();
-        mesh.RecalculateNormals();
 
-        return mesh;
+        mesh.RecalculateNormals();
+    }
+
+    float GetHeight(float x, float y) {
+        float val = Mathf.PerlinNoise(x * seabedHeightResolution + seed, y * seabedHeightResolution + seed);
+        return val * seabedHeight;
     }
 }
