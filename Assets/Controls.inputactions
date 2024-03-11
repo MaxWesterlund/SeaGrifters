@@ -70,13 +70,22 @@
             ]
         },
         {
-            "name": "Movement",
-            "id": "954ca6fb-0bc4-490e-a646-dac6e666f4c8",
+            "name": "Ship",
+            "id": "30050770-9fb9-4a60-8e10-e9bcb927c09c",
             "actions": [
                 {
-                    "name": "Move",
+                    "name": "Steer",
                     "type": "Value",
-                    "id": "ac1eb817-8480-4383-8f33-04c970480106",
+                    "id": "22a10987-3929-4df3-885d-c82dbd52dfec",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "RotateMast",
+                    "type": "Value",
+                    "id": "284b6c1d-79f9-4c8e-b30c-06853e666e1c",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
@@ -86,12 +95,23 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "85df2fac-aeb6-49fe-a018-54b9692cdb67",
+                    "id": "961fd1f3-a5b4-4b30-824f-715c9e62adf9",
                     "path": "<Gamepad>/leftStick",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "Steer",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "95159af9-e8e5-4749-8419-cc0ded71908b",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RotateMast",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

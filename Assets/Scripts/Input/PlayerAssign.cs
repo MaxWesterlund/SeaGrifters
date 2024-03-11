@@ -18,6 +18,9 @@ public class PlayerAssign : MonoBehaviour {
 
     void OnJoin(InputAction.CallbackContext ctx) {
         int id = ctx.control.device.deviceId;
+        if (id == PlayerDeviceInfo.Player1ID || id == PlayerDeviceInfo.Player2ID) {
+            return;
+        }
         if (PlayerDeviceInfo.Player1ID == -1) {
             PlayerDeviceInfo.Player1ID = id;
             player1UI.SetDeviceName($"{id}");
