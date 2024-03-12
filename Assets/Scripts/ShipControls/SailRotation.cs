@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class MastRotation : MonoBehaviour {
+public class SailRotation : MonoBehaviour {
     Player player;
+    ShipMovement shipMovement;
 
-    [SerializeField] Transform mast;
+    [SerializeField] Transform sail;
 
     Vector2 rotationVec;
 
@@ -14,6 +15,7 @@ public class MastRotation : MonoBehaviour {
 
     void Awake() {
         player = GetComponent<Player>();
+        shipMovement = GetComponentInParent<ShipMovement>();
     }
 
     void Start() {
@@ -29,7 +31,6 @@ public class MastRotation : MonoBehaviour {
     }
 
     void Update() {
-        rotation += Time.deltaTime * rotationVec.x;
-        mast.rotation = Quaternion.Euler(rotation * Vector3.forward);
+        shipMovement.AddSailRotation(rotationVec.x * Time.deltaTime);
     }
 }

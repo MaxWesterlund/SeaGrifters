@@ -5,15 +5,15 @@ using UnityEngine.InputSystem;
 
 public class ShipSteering : MonoBehaviour {
     Player player;
+    ShipMovement shipMovement;
 
     [SerializeField] Transform ship;
 
     Vector2 steerVec;
 
-    float rotation;
-
     void Awake() {
         player = GetComponent<Player>();
+        shipMovement = GetComponentInParent<ShipMovement>();
     }
 
     void Start() {
@@ -29,7 +29,6 @@ public class ShipSteering : MonoBehaviour {
     }
 
     void Update() {
-        rotation += steerVec.x * Time.deltaTime;
-        ship.rotation = Quaternion.Euler(rotation * Vector3.forward);
+        shipMovement.AddWheelRotation(steerVec.x * Time.deltaTime);
     }
 }
