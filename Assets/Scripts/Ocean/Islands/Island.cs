@@ -3,5 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Island : MonoBehaviour {
-    [SerializeField] string sceneName;
+    public string IslandName;
+    public string ScenePath;
 }

@@ -6,7 +6,6 @@ public class ShipCameraFollow : SingletonBehaviour<ShipCameraFollow> {
     [SerializeField] Transform target;
     [SerializeField] float distance;
     [SerializeField] float lookAngle;
-    [SerializeField] float lookAheadAngle;
 
     [HideInInspector] public Transform SecondaryTarget;
     
@@ -22,6 +21,6 @@ public class ShipCameraFollow : SingletonBehaviour<ShipCameraFollow> {
         }
 
         transform.position = Vector3.Lerp(transform.position, targetPosition + offset, 10 * Time.deltaTime);
-        transform.rotation = Quaternion.Euler((90 - lookAngle - lookAheadAngle) * Vector3.right);
+        transform.rotation = Quaternion.Euler((90 - lookAngle) * Vector3.right);
     }
 }
