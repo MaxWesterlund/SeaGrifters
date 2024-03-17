@@ -75,7 +75,7 @@
             "actions": [
                 {
                     "name": "Steer",
-                    "type": "Value",
+                    "type": "PassThrough",
                     "id": "22a10987-3929-4df3-885d-c82dbd52dfec",
                     "expectedControlType": "Vector2",
                     "processors": "",
@@ -84,7 +84,7 @@
                 },
                 {
                     "name": "RotateMast",
-                    "type": "Value",
+                    "type": "PassThrough",
                     "id": "284b6c1d-79f9-4c8e-b30c-06853e666e1c",
                     "expectedControlType": "Vector2",
                     "processors": "",
