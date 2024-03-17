@@ -15,6 +15,6 @@ public class Wind : SingletonBehaviour<Wind> {
     }
 
     public float GetWindAngle() {
-        return Mathf.Atan2(direction.z, direction.x);
+        return -Mathf.Atan2(direction.z, direction.x);
     }
 }

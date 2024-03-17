@@ -17,8 +17,6 @@ public class ShipMovement : MonoBehaviour {
     float shipRotation;
     float sailRotation;
 
-    Vector3 lastPos = Vector3.zero;
-
     void Start() {
         transform.position = depth * Vector3.down;
     }
@@ -27,37 +25,32 @@ public class ShipMovement : MonoBehaviour {
         Steer();
         RotateSails();
         Move();
-
-        lastPos = transform.position;
     }
 
     void Steer() {
-        shipRotation = (shipRotation + wheelRotation * turnSpeed) % 180;
+        shipRotation = shipRotation + wheelRotation * Time.deltaTime * turnSpeed;
         transform.rotation = Quaternion.Euler(shipRotation * Vector3.up);
     }
 
     void RotateSails() {
-        sails.localRotation = Quaternion.Euler(sailRotation * Vector3.up);
+        sails.localRotation = Quaternion.Euler(-sailRotation * Vector3.up);
     }
 
     void Move() {
-        float windAngle = Wind.Instance.GetWindAngle() * Mathf.Rad2Deg;
-        if (windAngle < 0) {
-            windAngle += 360;
-        }
-        float sailWorldRot = (shipRotation + sailRotation) % 360;
-        print(sailWorldRot);
-        float rotDiff = Mathf.Abs(windAngle - sailWorldRot);
-        float minRotDiff = Mathf.Min(rotDiff, 360 - rotDiff);
-        float windMultiplier = 1 - minRotDiff / 180;
+        float sailWorldRot = shipRotation + sailRotation + 90;
+        Vector3 sailDirection = new(Mathf.Cos(sailWorldRot * Mathf.Deg2Rad), 0, Mathf.Sin(sailWorldRot * Mathf.Deg2Rad));
+        Vector3 windDirection = Wind.Instance.GetWindDirection();
+        float betweenRot = Mathf.Acos(Vector3.Dot(sailDirection, windDirection) / (sailDirection.magnitude * windDirection.magnitude));
+        float windMultiplier = (Mathf.PI - betweenRot) / Mathf.PI;
         transform.position += speed * windMultiplier * Time.deltaTime * transform.forward;
     }
 
     public void AddWheelRotation(float rot) {
         wheelRotation = Mathf.Clamp(wheelRotation + rot * wheelRotationSpeed, -maxWheelRotation, maxWheelRotation);
+        ShipInfo.wheelRotation = wheelRotation;
     }
 
     public void AddSailRotation(float rot) {
-        sailRotation = Mathf.Clamp(sailRotation + rot * sailRotationSpeed, -maxSailRotation, maxSailRotation);
+        sailRotation = Mathf.Clamp(sailRotation - rot * sailRotationSpeed, -maxSailRotation, maxSailRotation);
     }
 }
