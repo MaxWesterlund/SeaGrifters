@@ -12,7 +12,7 @@ public class IslandManager : SingletonBehaviour<IslandManager> {
 
     Island selectedIsland;
 
-    void Start() {
+    void OnEnable() {
         InputManager.Instance.SubPerformed("EnterIsland", OnEnterIsland);
     }
     
@@ -46,8 +46,9 @@ public class IslandManager : SingletonBehaviour<IslandManager> {
     void OnEnterIsland(InputAction.CallbackContext ctx) {
         if (selectedIsland == null) return;
 
-        if (PlayerDeviceInfo.IsPlayer1(ctx)) {
-            SceneManager.LoadScene(selectedIsland.ScenePath);
+        int id = ctx.control.device.deviceId;
+        if (id == PlayerDeviceInfo.Player1ID) {
+            LevelManager.Instance.SwitchScene(selectedIsland.ScenePath);
         }
     }
 }

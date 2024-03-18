@@ -43,7 +43,7 @@ public class PlayerAssign : MonoBehaviour {
         }
 
         if (player1Ready && player2Ready) {
-            SceneManager.LoadScene("Gameplay");
+            LevelManager.Instance.SwitchScene("ShipHub");
         }
     }
 

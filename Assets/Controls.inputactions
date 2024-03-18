@@ -2,7 +2,7 @@
     "name": "Controls",
     "maps": [
         {
-            "name": "Joining",
+            "name": "PlayerAssign",
             "id": "931c62fc-af63-412f-9dd9-83d7e51fed85",
             "actions": [
                 {
@@ -70,7 +70,7 @@
             ]
         },
         {
-            "name": "Ship",
+            "name": "ShipHub",
             "id": "30050770-9fb9-4a60-8e10-e9bcb927c09c",
             "actions": [
                 {
