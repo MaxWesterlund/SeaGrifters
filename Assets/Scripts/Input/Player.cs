@@ -2,14 +2,14 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour {
-    [SerializeField] PlayerNumber playerNbr = PlayerNumber.One;
+    [SerializeField] PlayerNumber playerNumber = PlayerNumber.One;
 
     public bool IsInput(InputAction.CallbackContext ctx) {
         int id = ctx.control.device.deviceId;
-        if (PlayerNumber.One == playerNbr && PlayerDeviceInfo.Player1ID == id) {
+        if (PlayerNumber.One == playerNumber && PlayerDeviceInfo.Player1ID == id) {
             return true;
         }
-        else if (PlayerNumber.Two == playerNbr && PlayerDeviceInfo.Player2ID == id) {
+        else if (PlayerNumber.Two == playerNumber && PlayerDeviceInfo.Player2ID == id) {
             return true;
         }
         return false;

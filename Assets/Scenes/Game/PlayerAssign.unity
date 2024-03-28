@@ -626,6 +626,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player1UI: {fileID: 1235218015}
   player2UI: {fileID: 1020613081}
+  firstScene: River
 --- !u!4 &1143980741
 Transform:
   m_ObjectHideFlags: 0

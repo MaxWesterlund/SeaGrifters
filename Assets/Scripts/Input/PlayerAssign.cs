@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 public class PlayerAssign : MonoBehaviour {
     [SerializeField] PlayerAssignUI player1UI;
     [SerializeField] PlayerAssignUI player2UI;
+    [SerializeField] string firstScene;
 
     bool player1Ready;
     bool player2Ready;
@@ -43,7 +44,7 @@ public class PlayerAssign : MonoBehaviour {
         }
 
         if (player1Ready && player2Ready) {
-            LevelManager.Instance.SwitchScene("ShipHub");
+            LevelManager.Instance.SwitchScene(firstScene);
         }
     }
 
