@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7941266373351202783}
   - component: {fileID: 4440669422785447359}
   - component: {fileID: 3512297878492689696}
+  - component: {fileID: 7025384959406936891}
   - component: {fileID: 3194294354254500241}
   - component: {fileID: 6525244618283118313}
   m_Layer: 0
@@ -64,6 +65,20 @@ MonoBehaviour:
   speed: 4
   jumpForce: 5
   jumpForgiveTime: 0.1
+--- !u!114 &7025384959406936891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8321969349856285840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5deef26246383b546bacd7c0b5651a80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minBoatDistance: 1
+  boat: {fileID: 0}
 --- !u!50 &3194294354254500241
 Rigidbody2D:
   serializedVersion: 4
@@ -83,10 +98,10 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 119
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
